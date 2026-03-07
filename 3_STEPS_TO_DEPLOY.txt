@@ -1,0 +1,89 @@
+╔═══════════════════════════════════════════════════════════════════╗
+║                                                                   ║
+║                    3 STEPS TO DEPLOY                              ║
+║                                                                   ║
+╚═══════════════════════════════════════════════════════════════════╝
+
+
+┌───────────────────────────────────────────────────────────────────┐
+│ STEP 1: Deploy to AWS (5-10 minutes)                             │
+└───────────────────────────────────────────────────────────────────┘
+
+Open PowerShell and run:
+
+    .\DEPLOY_NOW_SIMPLE.ps1
+
+Wait for it to complete. You'll see:
+    ✓ Building Lambda functions...
+    ✓ Deploying to AWS...
+    ✓ Deployment Complete!
+    ✓ API Endpoint: https://abc123.execute-api.us-east-1.amazonaws.com/Prod
+
+Copy the API endpoint URL!
+
+
+┌───────────────────────────────────────────────────────────────────┐
+│ STEP 2: Configure Frontend (30 seconds)                          │
+└───────────────────────────────────────────────────────────────────┘
+
+Navigate to frontend:
+
+    cd frontend
+
+Edit the .env file and add your API endpoint:
+
+    REACT_APP_API_URL=https://your-api-endpoint-here.amazonaws.com/Prod
+
+Save the file.
+
+
+┌───────────────────────────────────────────────────────────────────┐
+│ STEP 3: Start Frontend (1 minute)                                │
+└───────────────────────────────────────────────────────────────────┘
+
+Start the React app:
+
+    npm start
+
+Open your browser:
+
+    http://localhost:3000
+
+Test it:
+    1. Upload a PDF document
+    2. Wait 30-60 seconds
+    3. See the results!
+
+
+╔═══════════════════════════════════════════════════════════════════╗
+║                                                                   ║
+║  That's it! 3 simple steps.                                       ║
+║                                                                   ║
+║  Start now: .\DEPLOY_NOW_SIMPLE.ps1                              ║
+║                                                                   ║
+╚═══════════════════════════════════════════════════════════════════╝
+
+
+WHAT YOU'LL GET:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✓ Cloud-native legal document processing system
+✓ Automatic document summarization
+✓ 10 legal clause extraction
+✓ Deviation detection from standards
+✓ Document comparison mode
+✓ Real-time processing status
+✓ Beautiful React UI
+✓ Fully serverless (pay per use)
+✓ Production-ready AWS infrastructure
+
+
+COST:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Free tier eligible: ~$0-5/month for light usage
+
+
+NEED HELP?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Read: FINAL_DEPLOYMENT_GUIDE.md
+Check: DEPLOYMENT_CHECKLIST.txt
+Commands: COMMANDS.txt

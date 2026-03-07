@@ -1,0 +1,27 @@
+﻿Deployment Information
+======================
+Date: 02/25/2026 10:37:22
+Environment: dev
+Region: us-east-1
+Stack Name: legal-doc-processing-dev
+API Endpoint: https://6zurbbpdfg.execute-api.us-east-1.amazonaws.com/dev
+Account ID: 623242866456
+
+Resources Created:
+- 5 Lambda Functions
+- API Gateway
+- 2 S3 Buckets
+- DynamoDB Table
+- Glue Database & Crawler
+- CloudWatch Log Groups
+- IAM Roles
+
+Next Steps:
+1. Test API: curl -X POST https://6zurbbpdfg.execute-api.us-east-1.amazonaws.com/dev/upload -H "Content-Type: application/json" -d '{"mode":"single","file_content":"dGVzdA==","file_name":"test.pdf"}'
+2. Build frontend: cd frontend && npm run build
+3. Deploy frontend: aws s3 sync frontend/build/ s3://legal-doc-frontend-prod-623242866456
+
+Documentation:
+- API Documentation: docs/API_DOCUMENTATION.md
+- Deployment Guide: AWS_DEPLOYMENT.md
+- Quick Reference: DEPLOY_QUICK_REFERENCE.md

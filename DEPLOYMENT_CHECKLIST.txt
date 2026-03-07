@@ -1,0 +1,95 @@
+╔═══════════════════════════════════════════════════════════════════╗
+║                    DEPLOYMENT CHECKLIST                           ║
+╚═══════════════════════════════════════════════════════════════════╝
+
+PRE-DEPLOYMENT (Already Done ✅):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ AWS CLI installed and configured
+✅ SAM CLI installed
+✅ Python 3.11 installed
+✅ All Lambda functions written
+✅ SAM template configured
+✅ SAM build completed successfully
+✅ Configuration file (samconfig.toml) created
+✅ Invalid "y" file removed
+✅ Dependencies simplified (no Docker needed)
+
+
+DEPLOYMENT (Do This Now 👇):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+☐ Open PowerShell in project root directory
+☐ Run: .\DEPLOY_NOW_SIMPLE.ps1
+☐ Wait 5-10 minutes for deployment
+☐ Copy the API endpoint URL shown at the end
+
+
+POST-DEPLOYMENT (After AWS Deploy):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+☐ Navigate to frontend directory: cd frontend
+☐ Edit .env file
+☐ Add: REACT_APP_API_URL=<your-api-endpoint>
+☐ Save the file
+☐ Run: npm start
+☐ Open browser: http://localhost:3000
+☐ Test document upload
+☐ Test summarization
+☐ Test deviation detection
+☐ Test comparison mode
+
+
+VERIFICATION:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+☐ Check stack status:
+  aws cloudformation describe-stacks --stack-name legal-doc-processing-dev --query "Stacks[0].StackStatus" --output text
+  (Should show: CREATE_COMPLETE)
+
+☐ Check API endpoint:
+  aws cloudformation describe-stacks --stack-name legal-doc-processing-dev --query "Stacks[0].Outputs[?OutputKey=='ApiEndpoint'].OutputValue" --output text
+
+☐ Check S3 bucket created:
+  aws s3 ls | findstr legal-doc
+
+☐ Check DynamoDB table:
+  aws dynamodb list-tables | findstr legal-doc
+
+☐ Check Lambda functions:
+  aws lambda list-functions --query "Functions[?contains(FunctionName, 'legal-doc')].[FunctionName]" --output table
+
+
+TESTING:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+☐ Upload a PDF document
+☐ Wait for processing (30-60 seconds)
+☐ Verify summary appears
+☐ Verify clauses extracted (should see 10 clauses)
+☐ Verify deviations detected
+☐ Upload second document
+☐ Test comparison mode
+☐ Verify conflicts detected
+
+
+TROUBLESHOOTING:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+If deployment fails:
+☐ Check AWS credentials: aws sts get-caller-identity
+☐ Check region is us-east-1
+☐ Check CloudFormation console for errors
+☐ Check CloudWatch logs for Lambda errors
+
+If PowerShell script won't run:
+☐ Run: Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+☐ Try again: .\DEPLOY_NOW_SIMPLE.ps1
+
+
+CLEANUP (When Done):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+To delete all AWS resources and stop charges:
+☐ cd infrastructure
+☐ sam delete --stack-name legal-doc-processing-dev --region us-east-1 --no-prompts
+
+
+╔═══════════════════════════════════════════════════════════════════╗
+║                                                                   ║
+║  🚀 NEXT STEP: Run .\DEPLOY_NOW_SIMPLE.ps1                       ║
+║                                                                   ║
+╚═══════════════════════════════════════════════════════════════════╝

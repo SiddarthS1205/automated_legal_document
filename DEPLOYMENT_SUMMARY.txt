@@ -1,0 +1,58 @@
+╔════════════════════════════════════════════════════════════════╗
+║                   AWS DEPLOYMENT READY                         ║
+╚════════════════════════════════════════════════════════════════╝
+
+📋 WHAT'S CONFIGURED:
+   ✓ Stack Name: legal-doc-processing-dev
+   ✓ Region: us-east-1
+   ✓ Runtime: Python 3.11
+   ✓ All Lambda functions built
+   ✓ No Docker required
+
+🚀 TO DEPLOY NOW:
+
+   Option A (Easiest):
+   .\DEPLOY_NOW_SIMPLE.ps1
+
+   Option B (Manual):
+   cd infrastructure
+   sam deploy --stack-name legal-doc-processing-dev ^
+              --capabilities CAPABILITY_IAM ^
+              --region us-east-1 ^
+              --parameter-overrides Environment=dev ^
+              --resolve-s3 ^
+              --no-confirm-changeset
+
+⏱️  DEPLOYMENT TIME: 5-10 minutes
+
+📦 WHAT GETS CREATED:
+   • S3 Bucket (document storage)
+   • DynamoDB Table (metadata)
+   • 5 Lambda Functions (processing)
+   • API Gateway (REST API)
+   • IAM Roles (permissions)
+
+💰 COST: Free tier eligible (~$0-5/month)
+
+📝 AFTER DEPLOYMENT:
+   1. Copy the API endpoint URL shown
+   2. Update frontend/.env with the URL
+   3. Run: cd frontend
+   4. Run: npm start
+   5. Open: http://localhost:3000
+
+🔍 CHECK STATUS ANYTIME:
+   aws cloudformation describe-stacks ^
+       --stack-name legal-doc-processing-dev ^
+       --query "Stacks[0].StackStatus" ^
+       --output text
+
+🌐 GET API ENDPOINT LATER:
+   aws cloudformation describe-stacks ^
+       --stack-name legal-doc-processing-dev ^
+       --query "Stacks[0].Outputs[?OutputKey=='ApiEndpoint'].OutputValue" ^
+       --output text
+
+╔════════════════════════════════════════════════════════════════╗
+║  Ready to deploy? Run: .\DEPLOY_NOW_SIMPLE.ps1                ║
+╚════════════════════════════════════════════════════════════════╝

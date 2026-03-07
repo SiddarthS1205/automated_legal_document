@@ -1,0 +1,80 @@
+═══════════════════════════════════════════════════════════════════
+                        QUICK COMMAND REFERENCE
+═══════════════════════════════════════════════════════════════════
+
+🚀 DEPLOY TO AWS:
+───────────────────────────────────────────────────────────────────
+.\DEPLOY_NOW_SIMPLE.ps1
+
+
+📋 CHECK DEPLOYMENT STATUS:
+───────────────────────────────────────────────────────────────────
+aws cloudformation describe-stacks --stack-name legal-doc-processing-dev --query "Stacks[0].StackStatus" --output text
+
+
+🌐 GET API ENDPOINT:
+───────────────────────────────────────────────────────────────────
+aws cloudformation describe-stacks --stack-name legal-doc-processing-dev --query "Stacks[0].Outputs[?OutputKey=='ApiEndpoint'].OutputValue" --output text
+
+
+📦 LIST ALL RESOURCES:
+───────────────────────────────────────────────────────────────────
+aws cloudformation describe-stack-resources --stack-name legal-doc-processing-dev --output table
+
+
+🔍 CHECK S3 BUCKET:
+───────────────────────────────────────────────────────────────────
+aws s3 ls | findstr legal-doc
+
+
+🗄️ CHECK DYNAMODB TABLE:
+───────────────────────────────────────────────────────────────────
+aws dynamodb list-tables | findstr legal-doc
+
+
+⚡ CHECK LAMBDA FUNCTIONS:
+───────────────────────────────────────────────────────────────────
+aws lambda list-functions --query "Functions[?contains(FunctionName, 'legal-doc')].[FunctionName]" --output table
+
+
+📊 VIEW CLOUDWATCH LOGS:
+───────────────────────────────────────────────────────────────────
+aws logs describe-log-groups --log-group-name-prefix /aws/lambda/legal-doc
+
+
+💰 CHECK COSTS:
+───────────────────────────────────────────────────────────────────
+Open: https://console.aws.amazon.com/billing/
+
+
+🧪 START FRONTEND (After Deployment):
+───────────────────────────────────────────────────────────────────
+cd frontend
+npm start
+
+
+🧹 DELETE EVERYTHING (Cleanup):
+───────────────────────────────────────────────────────────────────
+cd infrastructure
+sam delete --stack-name legal-doc-processing-dev --region us-east-1 --no-prompts
+
+
+🔧 TROUBLESHOOTING:
+───────────────────────────────────────────────────────────────────
+# Check AWS credentials
+aws sts get-caller-identity
+
+# Check AWS region
+aws configure get region
+
+# Rebuild Lambda functions
+cd infrastructure
+sam build --template-file template.yaml
+
+# View CloudFormation events
+aws cloudformation describe-stack-events --stack-name legal-doc-processing-dev --max-items 10
+
+
+═══════════════════════════════════════════════════════════════════
+                    COPY & PASTE READY
+═══════════════════════════════════════════════════════════════════

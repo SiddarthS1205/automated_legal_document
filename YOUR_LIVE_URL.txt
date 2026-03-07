@@ -1,0 +1,24 @@
+================================================================
+  LEGAL DOCUMENT PROCESSING SYSTEM - LIVE DEPLOYMENT
+================================================================
+
+🌐 YOUR LIVE APPLICATION URL:
+http://legal-doc-frontend-dev-623242866456.s3-website-us-east-1.amazonaws.com
+
+Share this URL with users to access your application!
+
+================================================================
+
+Technical Details:
+------------------
+Frontend (S3 Website): http://legal-doc-frontend-dev-623242866456.s3-website-us-east-1.amazonaws.com
+Backend API Endpoint: https://6zurbbpdfg.execute-api.us-east-1.amazonaws.com/dev
+S3 Upload Bucket: legal-doc-upload-dev-623242866456
+S3 Processed Bucket: legal-doc-processed-dev-623242866456
+DynamoDB Table: legal-documents-dev
+
+Deployed: February 25, 2026
+Region: us-east-1
+Environment: dev
+
+================================================================

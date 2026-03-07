@@ -1,0 +1,46 @@
+========================================
+DEPLOY TO AWS - SIMPLE INSTRUCTIONS
+========================================
+
+You're already in the correct directory!
+The SAM build succeeded!
+
+OPTION 1 - PowerShell (Recommended):
+------------------------------------
+.\DEPLOY_NOW_SIMPLE.ps1
+
+
+OPTION 2 - Command Prompt:
+------------------------------------
+DEPLOY_NOW_SIMPLE.bat
+
+
+OPTION 3 - Manual Commands:
+------------------------------------
+cd infrastructure
+sam deploy --stack-name legal-doc-processing-dev --capabilities CAPABILITY_IAM --region us-east-1 --parameter-overrides Environment=dev --resolve-s3 --no-confirm-changeset
+
+
+WHAT HAPPENS:
+------------------------------------
+1. Removes the invalid "y" file (if it exists)
+2. Builds all Lambda functions
+3. Deploys to AWS without any prompts
+4. Shows you the API endpoint URL
+
+
+AFTER DEPLOYMENT:
+------------------------------------
+1. Copy the API endpoint URL
+2. Update frontend/.env with:
+   REACT_APP_API_URL=<your-api-endpoint>
+3. cd frontend
+4. npm start
+
+
+TROUBLESHOOTING:
+------------------------------------
+If you get "script is not digitally signed" error:
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+
+Then run the script again.

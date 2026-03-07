@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mock Server Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        h1 {
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+        
+        .section {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+        
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            margin: 0.5rem 0.5rem 0.5rem 0;
+            transition: all 0.3s ease;
+        }
+        
+        button:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .output {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-top: 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+        
+        .status.success {
+            background: #27ae60;
+            color: white;
+        }
+        
+        .status.error {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .status.pending {
+            background: #f39c12;
+            color: white;
+        }
+        
+        input[type="file"] {
+            margin: 1rem 0;
+            padding: 0.5rem;
+        }
+        
+        .info {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+        
+        .doc-id {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Mock Server Test Page</h1>
+        <p>Test the mock server endpoints without the React frontend</p>
+        
+        <div class="info">
+            <strong>Server URL:</strong> http://localhost:3001<br>
+            <strong>Status:</strong> <span id="serverStatus">Checking...</span>
+        </div>
+        
+        <div class="section">
+            <h2>1. Upload Single Document</h2>
+            <button onclick="testUpload()">Test Upload</button>
+            <button onclick="testUploadWithFile()">Upload with File</button>
+            <input type="file" id="fileInput" accept=".pdf,.docx" style="display:none;">
+            <div id="uploadOutput" class="output">Click button to test...</div>
+        </div>
+        
+        <div class="section">
+            <h2>2. Compare Two Documents</h2>
+            <button onclick="testCompare()">Test Compare</button>
+            <div id="compareOutput" class="output">Click button to test...</div>
+        </div>
+        
+        <div class="section">
+            <h2>3. Check Status</h2>
+            <div id="docIdDisplay" class="doc-id" style="display:none;">
+                Document ID: <strong id="currentDocId"></strong>
+            </div>
+            <button onclick="testStatus()">Check Status</button>
+            <button onclick="pollStatus()">Auto-Poll Status</button>
+            <button onclick="stopPolling()">Stop Polling</button>
+            <div id="statusOutput" class="output">Upload a document first...</div>
+        </div>
+        
+        <div class="section">
+            <h2>4. Debug Endpoints</h2>
+            <button onclick="listDocuments()">List All Documents</button>
+            <button onclick="clearDocuments()">Clear All Documents</button>
+            <div id="debugOutput" class="output">Click button to test...</div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:3001';
+        let currentDocId = null;
+        let pollingInterval = null;
+
+        // Check server status on load
+        async function checkServerStatus() {
+            try {
+                const response = await fetch(API_URL);
+                const data = await response.json();
+                document.getElementById('serverStatus').innerHTML = 
+                    '<span class="status success">Online ✓</span>';
+            } catch (error) {
+                document.getElementById('serverStatus').innerHTML = 
+                    '<span class="status error">Offline ✗</span>';
+            }
+        }
+
+        async function testUpload() {
+            const output = document.getElementById('uploadOutput');
+            output.textContent = 'Uploading...';
+            
+            try {
+                const response = await fetch(`${API_URL}/upload`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        mode: 'single',
+                        file_content: btoa('This is a test contract document'),
+                        file_name: 'test_contract.pdf',
+                        content_type: 'application/pdf'
+                    })
+                });
+                
+                const data = await response.json();
+                currentDocId = data.doc_id;
+                
+                output.textContent = JSON.stringify(data, null, 2);
+                
+                // Show doc ID
+                document.getElementById('currentDocId').textContent = currentDocId;
+                document.getElementById('docIdDisplay').style.display = 'block';
+                
+            } catch (error) {
+                output.textContent = `Error: ${error.message}`;
+            }
+        }
+
+        async function testUploadWithFile() {
+            const fileInput = document.getElementById('fileInput');
+            fileInput.click();
+            
+            fileInput.onchange = async (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                const output = document.getElementById('uploadOutput');
+                output.textContent = `Uploading ${file.name}...`;
+                
+                const reader = new FileReader();
+                reader.onload = async (event) => {
+                    const base64 = event.target.result.split(',')[1];
+                    
+                    try {
+                        const response = await fetch(`${API_URL}/upload`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                mode: 'single',
+                                file_content: base64,
+                                file_name: file.name,
+                                content_type: file.type
+                            })
+                        });
+                        
+                        const data = await response.json();
+                        currentDocId = data.doc_id;
+                        
+                        output.textContent = JSON.stringify(data, null, 2);
+                        
+                        document.getElementById('currentDocId').textContent = currentDocId;
+                        document.getElementById('docIdDisplay').style.display = 'block';
+                        
+                    } catch (error) {
+                        output.textContent = `Error: ${error.message}`;
+                    }
+                };
+                reader.readAsDataURL(file);
+            };
+        }
+
+        async function testCompare() {
+            const output = document.getElementById('compareOutput');
+            output.textContent = 'Uploading comparison documents...';
+            
+            try {
+                const response = await fetch(`${API_URL}/compare`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        mode: 'compare',
+                        file1_content: btoa('This is version 1 of the contract'),
+                        file1_name: 'contract_v1.pdf',
+                        file2_content: btoa('This is version 2 of the contract with changes'),
+                        file2_name: 'contract_v2.pdf'
+                    })
+                });
+                
+                const data = await response.json();
+                currentDocId = data.doc_id;
+                
+                output.textContent = JSON.stringify(data, null, 2);
+                
+                document.getElementById('currentDocId').textContent = currentDocId;
+                document.getElementById('docIdDisplay').style.display = 'block';
+                
+            } catch (error) {
+                output.textContent = `Error: ${error.message}`;
+            }
+        }
+
+        async function testStatus() {
+            if (!currentDocId) {
+                alert('Please upload a document first!');
+                return;
+            }
+            
+            const output = document.getElementById('statusOutput');
+            output.textContent = 'Checking status...';
+            
+            try {
+                const response = await fetch(`${API_URL}/status/${currentDocId}`);
+                const data = await response.json();
+                
+                output.textContent = JSON.stringify(data, null, 2);
+                
+            } catch (error) {
+                output.textContent = `Error: ${error.message}`;
+            }
+        }
+
+        async function pollStatus() {
+            if (!currentDocId) {
+                alert('Please upload a document first!');
+                return;
+            }
+            
+            stopPolling(); // Clear any existing polling
+            
+            const output = document.getElementById('statusOutput');
+            let attempts = 0;
+            
+            pollingInterval = setInterval(async () => {
+                attempts++;
+                
+                try {
+                    const response = await fetch(`${API_URL}/status/${currentDocId}`);
+                    const data = await response.json();
+                    
+                    output.textContent = `Poll #${attempts} - ${new Date().toLocaleTimeString()}\n\n` + 
+                                        JSON.stringify(data, null, 2);
+                    
+                    if (data.status === 'complete') {
+                        stopPolling();
+                        output.textContent += '\n\n✅ Processing complete! Polling stopped.';
+                    }
+                    
+                } catch (error) {
+                    output.textContent = `Error: ${error.message}`;
+                    stopPolling();
+                }
+            }, 2000);
+        }
+
+        function stopPolling() {
+            if (pollingInterval) {
+                clearInterval(pollingInterval);
+                pollingInterval = null;
+            }
+        }
+
+        async function listDocuments() {
+            const output = document.getElementById('debugOutput');
+            output.textContent = 'Loading documents...';
+            
+            try {
+                const response = await fetch(`${API_URL}/documents`);
+                const data = await response.json();
+                
+                output.textContent = JSON.stringify(data, null, 2);
+                
+            } catch (error) {
+                output.textContent = `Error: ${error.message}`;
+            }
+        }
+
+        async function clearDocuments() {
+            if (!confirm('Clear all documents from mock server?')) {
+                return;
+            }
+            
+            const output = document.getElementById('debugOutput');
+            output.textContent = 'Clearing documents...';
+            
+            try {
+                const response = await fetch(`${API_URL}/documents`, {
+                    method: 'DELETE'
+                });
+                const data = await response.json();
+                
+                output.textContent = JSON.stringify(data, null, 2);
+                currentDocId = null;
+                document.getElementById('docIdDisplay').style.display = 'none';
+                
+            } catch (error) {
+                output.textContent = `Error: ${error.message}`;
+            }
+        }
+
+        // Check server status on page load
+        checkServerStatus();
+        setInterval(checkServerStatus, 5000);
+    </script>
+</body>
+</html>

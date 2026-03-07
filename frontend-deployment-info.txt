@@ -1,0 +1,21 @@
+﻿Frontend Deployment Information
+================================
+Date: 02/25/2026 10:52:11
+Environment: dev
+Region: us-east-1
+Account ID: 623242866456
+
+Live URL: http://legal-doc-frontend-dev-623242866456.s3-website-us-east-1.amazonaws.com
+S3 Bucket: legal-doc-frontend-dev-623242866456
+API Endpoint: https://6zurbbpdfg.execute-api.us-east-1.amazonaws.com/dev
+
+To update the frontend:
+1. Make changes to frontend code
+2. Run: .\deploy-frontend.ps1
+
+To add custom domain (optional):
+1. Register domain in Route 53
+2. Create CloudFront distribution
+3. Add SSL certificate
+4. Point domain to CloudFront
+

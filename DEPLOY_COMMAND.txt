@@ -1,0 +1,14 @@
+========================================
+COPY AND RUN THIS COMMAND NOW:
+========================================
+
+.\DEPLOY_NOW_SIMPLE.ps1
+
+========================================
+OR THIS ONE:
+========================================
+
+cd infrastructure
+sam deploy --stack-name legal-doc-processing-dev --capabilities CAPABILITY_IAM --region us-east-1 --parameter-overrides Environment=dev --resolve-s3 --no-confirm-changeset
+
+========================================
