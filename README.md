@@ -18,6 +18,22 @@
 - **ML/AI**: Sentence Transformers, TF-IDF, scikit-learn
 - **Deployment**: AWS SAM (Infrastructure as Code)
 
+## System Architecture
+
+Frontend (React)
+↓
+API Gateway
+↓
+AWS Lambda
+↓
+S3 Storage
+↓
+ML Engine (Sentence Transformers)
+↓
+GenAI Clause Extraction
+↓
+Risk Analyzer
+
 ## 📁 Project Structure
 
 ```
@@ -117,3 +133,16 @@ aws cloudformation describe-stacks \
 ## Live Demo
 Frontend:
 http://legal-doc-frontend-dev-623242866456.s3-website-us-east-1.amazonaws.com
+This demo allows users to upload legal documents and generate AI-powered summaries and clause comparisons.
+
+## Conclusion
+
+This project demonstrates a cloud-native AI system for automated legal document analysis.
+
+Key capabilities include:
+- GenAI-based clause extraction
+- ML-powered deviation detection
+- Automated executive summaries
+- Serverless AWS deployment
+
+The architecture ensures scalability, cost efficiency, and real-time document analysis for legal professionals.
