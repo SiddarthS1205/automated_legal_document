@@ -113,3 +113,7 @@ aws cloudformation describe-stacks \
 - ☁️ **[Deployment Guide](docs/DEPLOYMENT_GUIDE.md)** - AWS deployment
 - 🧪 **[Testing Guide](docs/TESTING_GUIDE.md)** - Testing strategies
 - 📋 **[Project Summary](docs/PROJECT_SUMMARY.md)** - Executive overview
+
+## Live Demo
+Frontend:
+http://legal-doc-frontend-dev-623242866456.s3-website-us-east-1.amazonaws.com
