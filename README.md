@@ -21,17 +21,17 @@
 ## System Architecture
 
 Frontend (React)
-↓
+    ↓
 API Gateway
-↓
+    ↓
 AWS Lambda
-↓
+    ↓
 S3 Storage
-↓
+    ↓
 ML Engine (Sentence Transformers)
-↓
+    ↓
 GenAI Clause Extraction
-↓
+    ↓
 Risk Analyzer
 
 ## 📁 Project Structure
